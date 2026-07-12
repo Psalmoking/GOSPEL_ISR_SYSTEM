@@ -17,6 +17,17 @@ export interface SearchParams {
   genre?: string;
 }
 
+// Exporting the static list of genres used in the database for the UI dropdown
+export const GENRES = [
+  "African Gospel",
+  "Choir Arrangement",
+  "Contemporary Gospel",
+  "Contemporary Worship",
+  "Messianic Worship",
+  "Traditional Gospel",
+  "Urban Contemporary"
+];
+
 // Python Flask server URL
 const API_BASE_URL = "http://127.0.0.1:5000/api";
 
@@ -62,7 +73,18 @@ export async function relatedTracks (track: Track, limit = 4): Promise<Track[]>{
     console.error("Failed to fetch related tracks:", error);
     return [];
   }
+}
 
+// Fetch the unique list of genres directly from the database
+export async function fetchGenres(): Promise<string[]> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/genres`);
+    if (!response.ok) throw new Error("Failed to fetch genres");
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching genres:", error);
+    return [];
+  }
 }
 
 // CODE

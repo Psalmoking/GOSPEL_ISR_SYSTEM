@@ -3,7 +3,8 @@ from flask_cors import CORS
 import sqlite3
 
 app = Flask(__name__)
-CORS(app)  # This allows the Vite app to fetch data from Flask
+# CORS(app)  # This allows the Vite app to fetch data from Flask
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 
 def get_db_connection():
@@ -46,6 +47,7 @@ def search_tracks():
 
     return jsonify([dict(row) for row in rows])
 
+
 @app.route("/api/tracks/<int:track_id>", methods=["GET"])
 def get_track(track_id):
     conn = get_db_connection()
@@ -53,11 +55,28 @@ def get_track(track_id):
     cursor.execute("SELECT * FROM tracks WHERE id = ?", (track_id))
     row = cursor.fetchone()
     conn.close()
-    
+
     if row:
         return jsonify(dict(row))
 
     return jsonify({"Error": "Track not found"}), 404
+
+
+@app.route("/api/genres", methods=["GET"])
+def get_genres():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # DISTINCT tells SQLite to only return unique values
+    cursor.execute("SELECT DISTINCT genre FROM tracks ORDER BY genre")
+    rows = cursor.fetchall()
+    conn.close()
+
+    # Extract the genres from the dictionary rows into a simple flat list
+    genres = [row["genre"] for row in rows if row["genre"]]
+
+    return jsonify(genres)
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

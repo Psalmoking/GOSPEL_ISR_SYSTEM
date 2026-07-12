@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Search, SlidersHorizontal, Sparkles, Music2, X } from "lucide-react";
 import { SiteFooter, SiteHeader } from "@/components/site-header";
 import { TrackCard } from "@/components/track-card";
-import { fetchSearch, GENRES, type Track } from "@/lib/tracks";
+import { fetchGenres, fetchSearch, /*GENRES,*/ type Track } from "@/lib/tracks";
 
 export const Route = createFileRoute("/")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -19,6 +19,18 @@ function HomePage() {
   const [genre, setGenre] = useState<string>(initial.genre ?? "all");
   const [results, setResults] = useState<Track[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // State variable to hold the genres
+  const [GENRES, setGenres] = useState<string[]>([]);
+
+  // Fetch the genres when the page first loads
+  useEffect(() => {
+    async function loadGenres() {
+      const dbGenres = await fetchGenres();
+      setGenres(dbGenres);
+    }
+    loadGenres();
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
