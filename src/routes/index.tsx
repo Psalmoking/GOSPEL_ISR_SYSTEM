@@ -59,8 +59,8 @@ function HomePage() {
             you were searching for.
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-base text-foreground/80 sm:text-lg">
-            Search a vibrant archive of hymns, worship anthems, and choir favorites — by
-            title, artist, or a lyric you can't stop humming.
+            Search a vibrant archive of hymns, worship anthems, and choir favorites — by title,
+            artist, or a lyric you can't stop humming.
           </p>
 
           {/* Search bar */}
@@ -158,7 +158,9 @@ function HomePage() {
               )}
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              {loading ? "Retrieving records…" : `${results.length} record${results.length === 1 ? "" : "s"} found`}
+              {loading
+                ? "Retrieving records…"
+                : `${results.length} record${results.length === 1 ? "" : "s"} found`}
             </p>
           </div>
           <Link
@@ -172,7 +174,12 @@ function HomePage() {
         {loading ? (
           <LoadingGrid />
         ) : results.length === 0 ? (
-          <EmptyState onReset={() => { setQuery(""); setGenre("all"); }} />
+          <EmptyState
+            onReset={() => {
+              setQuery("");
+              setGenre("all");
+            }}
+          />
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {results.map((t) => (
@@ -181,7 +188,6 @@ function HomePage() {
           </div>
         )}
       </section>
-
       <SiteFooter />
     </div>
   );
