@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Search, SlidersHorizontal, Sparkles, Music2, X } from "lucide-react";
 import { SiteFooter, SiteHeader } from "@/components/site-header";
 import { TrackCard } from "@/components/track-card";
-import { fetchGenres, fetchSearch, /*GENRES,*/ type Track } from "@/lib/tracks";
+import { fetchGenres, fetchSearch, type Track } from "@/lib/tracks";
 
 export const Route = createFileRoute("/")({
   validateSearch: (search: Record<string, unknown>) => ({

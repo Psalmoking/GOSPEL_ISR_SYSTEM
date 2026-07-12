@@ -1,12 +1,17 @@
+import { useState, useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteFooter, SiteHeader } from "@/components/site-header";
-import { GENRES, TRACKS } from "@/lib/tracks";
+import { fetchGenres, fetchSearch, Track } from "@/lib/tracks";
 
 export const Route = createFileRoute("/genres")({
   head: () => ({
     meta: [
       { title: "Browse Genres — Hallelu Gospel Archive" },
-      { name: "description", content: "Explore the gospel archive by genre — from choir classics to Afro gospel and modern worship." },
+      {
+        name: "description",
+        content:
+          "Explore the gospel archive by genre — from choir classics to Afro gospel and modern worship.",
+      },
       { property: "og:title", content: "Browse Genres — Hallelu Gospel Archive" },
       { property: "og:description", content: "Explore the gospel archive by genre." },
     ],
@@ -24,6 +29,35 @@ const PALETTE = [
 ];
 
 function GenresPage() {
+  const [TRACKS, setTracks] = useState<Track[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [GENRES, setGenres] = useState<string[]>([]);
+
+  useEffect(() => {
+    async function loadGenres() {
+      const dbGenres = await fetchGenres();
+      setGenres(dbGenres);
+    }
+    loadGenres();
+  }, []);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        // Fetch all tracks from the database
+        const dbTracks = await fetchSearch({});
+        setTracks(dbTracks);
+      } catch (error) {
+        console.error("Failed to fetch tracks", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    // THIS is the line that was missing!
+    loadData();
+  }, []);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />
@@ -37,46 +71,52 @@ function GenresPage() {
             Every <span className="text-gold-gradient">flavor</span> of praise.
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-foreground/80">
-            Traditional choirs, Afro gospel, modern worship — jump straight into the
-            corner of the archive that speaks to you.
+            Traditional choirs, Afro gospel, modern worship — jump straight into the corner of the
+            archive that speaks to you.
           </p>
         </div>
       </section>
 
       <section className="mx-auto max-w-7xl px-4 pb-24 pt-12 sm:px-6">
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {GENRES.map((genre, i) => {
-            const count = TRACKS.filter((t) => t.genre === genre).length;
-            const sample = TRACKS.find((t) => t.genre === genre);
-            return (
-              <Link
-                key={genre}
-                to="/"
-                search={{ genre }}
-                className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br ${PALETTE[i % PALETTE.length]} p-6 shadow-glow transition hover:-translate-y-1`}
-              >
-                {sample && (
-                  <img
-                    src={sample.image}
-                    alt=""
-                    aria-hidden
-                    className="absolute inset-0 h-full w-full object-cover opacity-20 mix-blend-overlay transition group-hover:opacity-30"
-                  />
-                )}
-                <div className="relative">
-                  <p className="text-xs uppercase tracking-widest text-white/70">Genre</p>
-                  <h3 className="mt-2 font-display text-3xl font-black text-white">{genre}</h3>
-                  <p className="mt-3 text-sm text-white/85">
-                    {count} song{count === 1 ? "" : "s"} in the archive
-                  </p>
-                  <span className="mt-6 inline-flex rounded-full bg-black/30 px-3 py-1.5 text-xs font-semibold uppercase tracking-widest text-white backdrop-blur">
-                    Explore →
-                  </span>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
+        {loading ? (
+          <div className="text-center text-lg font-bold py-12">Loading archive counts...</div>
+        ) : (
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {GENRES.map((genre, i) => {
+              // Now that TRACKS is populated, this filter will find the actual matches
+              const count = TRACKS.filter((t) => t.genre === genre).length;
+              const sample = TRACKS.find((t) => t.genre === genre);
+
+              return (
+                <Link
+                  key={genre}
+                  to="/"
+                  search={{ genre }}
+                  className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br ${PALETTE[i % PALETTE.length]} p-6 shadow-glow transition hover:-translate-y-1`}
+                >
+                  {sample && (
+                    <img
+                      src={sample.image}
+                      alt=""
+                      aria-hidden
+                      className="absolute inset-0 h-full w-full object-cover opacity-20 mix-blend-overlay transition group-hover:opacity-30"
+                    />
+                  )}
+                  <div className="relative">
+                    <p className="text-xs uppercase tracking-widest text-white/70">Genre</p>
+                    <h3 className="mt-2 font-display text-3xl font-black text-white">{genre}</h3>
+                    <p className="mt-3 text-sm text-white/85">
+                      {count} song{count === 1 ? "" : "s"} in the archive
+                    </p>
+                    <span className="mt-6 inline-flex rounded-full bg-black/30 px-3 py-1.5 text-xs font-semibold uppercase tracking-widest text-white backdrop-blur">
+                      Explore →
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        )}
       </section>
       <SiteFooter />
     </div>
