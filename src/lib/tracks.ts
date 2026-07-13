@@ -17,17 +17,6 @@ export interface SearchParams {
   genre?: string;
 }
 
-// Exporting the static list of genres used in the database for the UI dropdown
-export const GENRES = [
-  "African Gospel",
-  "Choir Arrangement",
-  "Contemporary Gospel",
-  "Contemporary Worship",
-  "Messianic Worship",
-  "Traditional Gospel",
-  "Urban Contemporary"
-];
-
 // Python Flask server URL
 const API_BASE_URL = "http://127.0.0.1:5000/api";
 

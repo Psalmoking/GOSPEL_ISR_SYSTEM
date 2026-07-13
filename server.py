@@ -48,20 +48,6 @@ def search_tracks():
     return jsonify([dict(row) for row in rows])
 
 
-@app.route("/api/tracks/<int:track_id>", methods=["GET"])
-def get_track(track_id):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM tracks WHERE id = ?", (track_id))
-    row = cursor.fetchone()
-    conn.close()
-
-    if row:
-        return jsonify(dict(row))
-
-    return jsonify({"Error": "Track not found"}), 404
-
-
 @app.route("/api/genres", methods=["GET"])
 def get_genres():
     conn = get_db_connection()
@@ -76,6 +62,24 @@ def get_genres():
     genres = [row["genre"] for row in rows if row["genre"]]
 
     return jsonify(genres)
+
+
+@app.route("/api/tracks/<int:track_id>", methods=["GET"])
+def get_track(track_id):
+    print("Calling this function")
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Ensure there is a comma after track_id so Python knows it is a tuple
+    cursor.execute("SELECT * FROM tracks WHERE id = ?", (track_id,))
+    row = cursor.fetchone()
+    conn.close()
+
+    print("Gotten to this junction of the code")
+    if row:
+        print("Actually printing something")
+        return jsonify(dict(row))
+    return jsonify({"error": "Track not found"}), 404
 
 
 if __name__ == "__main__":

@@ -5,15 +5,17 @@ import { TrackCard } from "@/components/track-card";
 import { getTrack, relatedTracks, type Track } from "@/lib/tracks";
 
 export const Route = createFileRoute("/track/$id")({
-  loader: ({ params }) => {
-    const track = getTrack(Number(params.id));
+  loader: async ({ params }) => {
+    const track = await getTrack(Number(params.id));
     if (!track) throw notFound();
-    const rel = relatedTracks(track);
+    const rel = await relatedTracks(track);
     return { track, related: rel };
   },
   head: ({ loaderData }) => {
     if (!loaderData) {
-      return { meta: [{ title: "Track not found — Hallelu" }, { name: "robots", content: "noindex" }] };
+      return {
+        meta: [{ title: "Track not found — Hallelu" }, { name: "robots", content: "noindex" }],
+      };
     }
     const { track } = loaderData;
     const title = `${track.title} — ${track.author} | Hallelu`;
@@ -88,9 +90,21 @@ function TrackDetailsPage() {
 
               <dl className="mt-8 grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
                 <Meta icon={<Disc3 className="h-4 w-4" />} label="Album" value={track.album} />
-                <Meta icon={<CalendarDays className="h-4 w-4" />} label="Released" value={track.release_date} />
-                <Meta icon={<Clock3 className="h-4 w-4" />} label="Duration" value={track.duration} />
-                <Meta icon={<User2 className="h-4 w-4" />} label="Year" value={String(track.year)} />
+                <Meta
+                  icon={<CalendarDays className="h-4 w-4" />}
+                  label="Released"
+                  value={track.release_date}
+                />
+                <Meta
+                  icon={<Clock3 className="h-4 w-4" />}
+                  label="Duration"
+                  value={track.duration}
+                />
+                <Meta
+                  icon={<User2 className="h-4 w-4" />}
+                  label="Year"
+                  value={String(track.year)}
+                />
               </dl>
             </div>
           </div>
@@ -154,9 +168,7 @@ function TrackDetailsPage() {
         <section className="mx-auto max-w-7xl px-4 pb-24 sm:px-6">
           <div className="mb-8 flex items-end justify-between gap-4">
             <div>
-              <h2 className="font-display text-3xl font-bold sm:text-4xl">
-                You may also love
-              </h2>
+              <h2 className="font-display text-3xl font-bold sm:text-4xl">You may also love</h2>
               <p className="mt-1 text-sm text-muted-foreground">
                 Hand-picked from the same genre and artists.
               </p>
