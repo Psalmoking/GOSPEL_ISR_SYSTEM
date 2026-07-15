@@ -26,7 +26,7 @@ Ensure you have the following installed on your local development environment:
 
 **1. Clone the repository and navigate into the project directory:**
 ```bash
-git clone <your-repository-url>
+git clone https://github.com/Psalmoking/GOSPEL_ISR_SYSTEM
 cd GOSPEL_ISR_SYSTEM
 ```
 
