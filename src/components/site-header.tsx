@@ -38,10 +38,10 @@ export function SiteHeader() {
           >
             About
           </Link>
-          <span className="ml-2 hidden items-center gap-1 rounded-full border border-white/10 px-3 py-1.5 text-xs text-muted-foreground md:inline-flex">
+          {/* <span className="ml-2 hidden items-center gap-1 rounded-full border border-white/10 px-3 py-1.5 text-xs text-muted-foreground md:inline-flex">
             <Sparkles className="h-3 w-3 text-primary" />
             12 tracks indexed
-          </span>
+          </span> */}
         </nav>
       </div>
     </header>

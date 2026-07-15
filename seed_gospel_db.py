@@ -45,11 +45,6 @@ def setup_database():
         for track in tracks_data
     ]
 
-    # print(tracks_tuples)
-    # for index, track in enumerate(tracks_tuples, start=1):
-    #     print(f"\n Track {index} \n\n")
-    #     print(track)
-
     # Insert the data safely using parameterize queries
     cursor.executemany(
         """

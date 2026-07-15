@@ -119,7 +119,7 @@ function TrackDetailsPage() {
               <span className="grid h-10 w-10 place-items-center rounded-2xl bg-secondary/60">
                 <Music2 className="h-5 w-5 text-primary" />
               </span>
-              <h2 className="font-display text-2xl font-bold">Full Lyrics</h2>
+              <h2 className="font-display text-2xl font-bold">Chorus Lyrics</h2>
             </div>
             <p className="mt-2 text-sm text-muted-foreground">
               Read every verse the way it was sung — line breaks preserved.
